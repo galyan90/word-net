@@ -1,20 +1,14 @@
+// state/GameContext.js - ניהול מצב המשחק
 import React, { createContext, useReducer } from 'react';
-import reducer from './reducer';
+import gameReducer, { initialState } from './reducer';
 
-const initialState = {
-  gameId: null,
-  players: [],
-  board: [],
-  currentTurn: null
-};
-
-export const GameContext = createContext(initialState);
+export const GameContext = createContext();
 
 export const GameProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(reducer, initialState);
-
+  const [gameState, dispatch] = useReducer(gameReducer, initialState);
+  
   return (
-    <GameContext.Provider value={{ ...state, dispatch }}>
+    <GameContext.Provider value={{ gameState, dispatch }}>
       {children}
     </GameContext.Provider>
   );
