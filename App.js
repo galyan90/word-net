@@ -1,14 +1,14 @@
+// App.js - נקודת הכניסה הראשית
 import React from 'react';
-import { NavigationContainer } from '@react-navigation/native';
-import AppNavigator from './navigation/AppNavigator';
 import { GameProvider } from './state/GameContext';
+import AppNavigator from './navigation/AppNavigator';
 
-export default function App() {
+function App() {
   return (
     <GameProvider>
-      <NavigationContainer>
-        <AppNavigator />
-      </NavigationContainer>
+      <AppNavigator />
     </GameProvider>
   );
 }
+
+export default App;
