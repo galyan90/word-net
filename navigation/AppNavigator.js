@@ -1,19 +1,23 @@
-import React from 'react';
-import { createStackNavigator } from '@react-navigation/stack';
+// navigation/AppNavigator.js - ניווט בין מסכים
+import React, { useContext } from 'react';
+import { GameContext } from '../state/GameContext';
 import HomeScreen from '../screens/HomeScreen';
-import LobbyScreen from '../screens/LobbyScreen';
 import GameScreen from '../screens/GameScreen';
 import EndGameScreen from '../screens/EndGameScreen';
 
-const Stack = createStackNavigator();
+const AppNavigator = () => {
+  const { gameState } = useContext(GameContext);
+  
+  switch(gameState.screen) {
+    case 'home':
+      return <HomeScreen />;
+    case 'game':
+      return <GameScreen />;
+    case 'end':
+      return <EndGameScreen />;
+    default:
+      return <HomeScreen />;
+  }
+};
 
-export default function AppNavigator() {
-  return (
-    <Stack.Navigator initialRouteName="Home">
-      <Stack.Screen name="Home" component={HomeScreen} />
-      <Stack.Screen name="Lobby" component={LobbyScreen} />
-      <Stack.Screen name="Game" component={GameScreen} />
-      <Stack.Screen name="EndGame" component={EndGameScreen} />
-    </Stack.Navigator>
-  );
-}
+export default AppNavigator;
