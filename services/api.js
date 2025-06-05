@@ -111,4 +111,112 @@ class ApiService {
   }
 
   // סיום תור
-  async en
+  async endTurn(roomCode, playerId) {
+    return this.request(`/rooms/${roomCode}/end-turn`, {
+      method: 'POST',
+      body: JSON.stringify({
+        playerId,
+        timestamp: Date.now()
+      }),
+    });
+  }
+
+  // איפוס משחק
+  async resetGame(roomCode, playerId) {
+    return this.request(`/rooms/${roomCode}/reset`, {
+      method: 'POST',
+      body: JSON.stringify({
+        playerId,
+        timestamp: Date.now()
+      }),
+    });
+  }
+
+  // קבלת רשימת חדרים פעילים
+  async getActiveRooms() {
+    return this.request('/rooms/active');
+  }
+
+  // בדיקת קישוריות לשרת
+  async healthCheck() {
+    try {
+      return await this.request('/health');
+    } catch (error) {
+      return { status: 'error', message: 'Server unavailable' };
+    }
+  }
+
+  // שמירת נתוני משחק מקומי (לסטטיסטיקות)
+  async saveGameStats(gameData) {
+    return this.request('/stats/game', {
+      method: 'POST',
+      body: JSON.stringify({
+        ...gameData,
+        timestamp: Date.now()
+      }),
+    });
+  }
+
+  // קבלת סטטיסטיקות שחקן
+  async getPlayerStats(playerId) {
+    return this.request(`/stats/player/${playerId}`);
+  }
+
+  // דיווח על באג או בעיה
+  async reportIssue(description, gameState = null) {
+    return this.request('/feedback/issue', {
+      method: 'POST',
+      body: JSON.stringify({
+        description,
+        gameState,
+        userAgent: navigator.userAgent,
+        timestamp: Date.now()
+      }),
+    });
+  }
+
+  // שליחת פידבק כללי
+  async sendFeedback(rating, comments) {
+    return this.request('/feedback/general', {
+      method: 'POST',
+      body: JSON.stringify({
+        rating,
+        comments,
+        timestamp: Date.now()
+      }),
+    });
+  }
+}
+
+// יצירת instance יחיד של השירות
+const apiService = new ApiService();
+
+// פונקציות עזר לשימוש קל
+export const gameAPI = {
+  // חדרים
+  createRoom: (playerName, team, role) => apiService.createRoom(playerName, team, role),
+  joinRoom: (code, playerName, team, role) => apiService.joinRoom(code, playerName, team, role),
+  leaveRoom: (code, playerId) => apiService.leaveRoom(code, playerId),
+  getRoomInfo: (code) => apiService.getRoomInfo(code),
+  
+  // משחק
+  startGame: (code, playerId) => apiService.startGame(code, playerId),
+  sendClue: (code, playerId, clue, number) => apiService.sendClue(code, playerId, clue, number),
+  selectCard: (code, playerId, cardId) => apiService.selectCard(code, playerId, cardId),
+  endTurn: (code, playerId) => apiService.endTurn(code, playerId),
+  resetGame: (code, playerId) => apiService.resetGame(code, playerId),
+  
+  // כללי
+  getActiveRooms: () => apiService.getActiveRooms(),
+  healthCheck: () => apiService.healthCheck(),
+  
+  // סטטיסטיקות
+  saveGameStats: (data) => apiService.saveGameStats(data),
+  getPlayerStats: (playerId) => apiService.getPlayerStats(playerId),
+  
+  // פידבק
+  reportIssue: (description, gameState) => apiService.reportIssue(description, gameState),
+  sendFeedback: (rating, comments) => apiService.sendFeedback(rating, comments)
+};
+
+export default apiService;
