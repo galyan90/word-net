@@ -1,13 +1,17 @@
-// App.js - נקודת הכניסה הראשית
+// App.js - נקודת הכניסה הראשית לאפליקציה
+
 import React from 'react';
 import { GameProvider } from './state/GameContext';
 import AppNavigator from './navigation/AppNavigator';
+import './App.css';
 
 function App() {
   return (
-    <GameProvider>
-      <AppNavigator />
-    </GameProvider>
+    <div className="App">
+      <GameProvider>
+        <AppNavigator />
+      </GameProvider>
+    </div>
   );
 }
 
