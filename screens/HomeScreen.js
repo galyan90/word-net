@@ -1,20 +1,23 @@
+// screens/HomeScreen.js - מסך הבית
 import React, { useContext } from 'react';
-import { View, Button } from 'react-native';
-import { createGame } from '../services/api';
 import { GameContext } from '../state/GameContext';
+import { initializeGame } from '../utils/wordGenerator';
 
-export default function HomeScreen({ navigation }) {
+const HomeScreen = () => {
   const { dispatch } = useContext(GameContext);
-
-  const handleNewGame = async () => {
-    const res = await createGame();
-    dispatch({ type: 'SET_GAME_ID', payload: res.gameId });
-    navigation.navigate('Lobby');
+  
+  const startGame = () => {
+    const gameData = initializeGame();
+    dispatch({ type: 'INIT_GAME', payload: gameData });
+    dispatch({ type: 'SET_SCREEN', payload: 'game' });
   };
-
+  
   return (
-    <View>
-      <Button title="Start New Game" onPress={handleNewGame} />
-    </View>
+    <div className="home-screen">
+      <h1>Codenames</h1>
+      <button onClick={startGame}>התחל משחק</button>
+    </div>
   );
-}
+};
+
+export default HomeScreen;
