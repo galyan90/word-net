@@ -1,31 +1,23 @@
-import React from 'react';
-import { TouchableOpacity, Text, StyleSheet } from 'react-native';
+// components/WordCard.js - קלף מילה
+import React, { useContext } from 'react';
+import { GameContext } from '../state/GameContext';
+import { CARD_COLORS } from '../constants/colors';
 
-export default function WordCard({ word, revealed }) {
+const WordCard = ({ card }) => {
+  const { gameState, dispatch } = useContext(GameContext);
+  
+  const selectCard = () => {
+    dispatch({ type: 'SELECT_CARD', payload: card.id });
+  };
+  
+  const isRevealed = gameState.revealed.has(card.id);
+  const cardStyle = isRevealed ? CARD_COLORS[card.type] : CARD_COLORS.hidden;
+  
   return (
-    <TouchableOpacity style={[styles.card, revealed && styles.revealed]}>
-      <Text style={styles.word}>{word}</Text>
-    </TouchableOpacity>
+    <button className={`word-card ${cardStyle}`} onClick={selectCard}>
+      {card.word}
+    </button>
   );
-}
+};
 
-const styles = StyleSheet.create({
-  card: {
-    width: 65,
-    height: 65,
-    backgroundColor: '#ffffff',
-    margin: 6,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderRadius: 8,
-    borderWidth: 1,
-    borderColor: '#ccc'
-  },
-  revealed: {
-    backgroundColor: '#ddd'
-  },
-  word: {
-    fontSize: 12,
-    textAlign: 'center'
-  }
-});
+export default WordCard;
